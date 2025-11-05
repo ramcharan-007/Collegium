@@ -1,18 +1,48 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import OTPVerification from './OTPVerification.tsx';
 
 const LoginSection = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+91');
+  const [showOTP, setShowOTP] = useState(false);
+  const [isRequestingOTP, setIsRequestingOTP] = useState(false);
 
-  const handleRequestOTP = () => {
+  const handleRequestOTP = async () => {
     if (mobileNumber.length === 10) {
+      setIsRequestingOTP(true);
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       console.log('Requesting OTP for:', countryCode + mobileNumber);
-      // Add OTP request logic here
+      setShowOTP(true);
+      setIsRequestingOTP(false);
     } else {
       alert('Please enter a valid 10-digit mobile number');
     }
   };
+
+  const handleVerificationSuccess = () => {
+    // This will be handled by navigation in OTPVerification component
+    console.log('OTP verified successfully');
+  };
+
+  const handleBackToLogin = () => {
+    setShowOTP(false);
+    setMobileNumber('');
+  };
+
+  // Show OTP verification if OTP was requested
+  if (showOTP) {
+    return (
+      <OTPVerification
+        phoneNumber={countryCode + mobileNumber}
+        onVerificationSuccess={handleVerificationSuccess}
+        onBack={handleBackToLogin}
+      />
+    );
+  }
 
   return (
     <div className="w-full max-w-full sm:max-w-md mx-auto">
@@ -20,7 +50,7 @@ const LoginSection = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Login
         </h2>
-        
+
         {/* Mobile Number Input */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -28,7 +58,7 @@ const LoginSection = () => {
           </label>
           <div className="flex gap-2">
             {/* Country Code */}
-            <select 
+            <select
               value={countryCode}
               onChange={(e) => setCountryCode(e.target.value)}
               className="w-20 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
@@ -37,7 +67,7 @@ const LoginSection = () => {
               <option value="+1">+1</option>
               <option value="+44">+44</option>
             </select>
-            
+
             {/* Mobile Number */}
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
@@ -57,9 +87,10 @@ const LoginSection = () => {
         {/* Request OTP Button */}
         <button
           onClick={handleRequestOTP}
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition-colors mb-4"
+          disabled={isRequestingOTP}
+          className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors mb-4"
         >
-          Request OTP
+          {isRequestingOTP ? 'Sending OTP...' : 'Request OTP'}
         </button>
 
         {/* Sign Up Link */}

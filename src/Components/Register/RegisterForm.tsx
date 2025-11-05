@@ -1,4 +1,4 @@
-import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, memo, useCallback, type ChangeEvent, type FormEvent } from 'react';
 import InputField from './InputField.tsx';
 import SelectField from './SelectField.tsx';
 import RadioGroup from './RadioGroup.tsx';
@@ -78,7 +78,7 @@ const RegisterForm = ({ selectedType, onTypeChange }: RegisterFormProps) => {
     { value: 'institute', label: 'Institute' }
   ];
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -97,7 +97,7 @@ const RegisterForm = ({ selectedType, onTypeChange }: RegisterFormProps) => {
         [name]: null
       }));
     }
-  };
+  }, [onTypeChange, errors]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -259,4 +259,4 @@ const RegisterForm = ({ selectedType, onTypeChange }: RegisterFormProps) => {
   );
 };
 
-export default RegisterForm;
+export default memo(RegisterForm);

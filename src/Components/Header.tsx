@@ -73,13 +73,20 @@ const Header = () => {
                   <button
                     onClick={() => setIsGoalDropdownOpen(!isGoalDropdownOpen)}
                     className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap"
+                    aria-expanded={isGoalDropdownOpen}
+                    aria-haspopup="listbox"
+                    aria-label="Select your goal and city"
                   >
-                    <span className="text-orange-500 text-sm">⚙️ Select Goal & ⊙ City</span>
+                    <span className="text-orange-500 text-sm" aria-hidden="true">⚙️ Select Goal & ⊙ City</span>
                   </button>
                   
                   {/* Dropdown */}
                   {isGoalDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-50 py-2">
+                    <div 
+                      className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-50 py-2"
+                      role="listbox"
+                      aria-label="Goal options"
+                    >
                       {goals.map((goal, index) => (
                         <button
                           key={index}
@@ -88,6 +95,8 @@ const Header = () => {
                             setIsGoalDropdownOpen(false);
                           }}
                           className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                          role="option"
+                          aria-selected={selectedGoal === goal}
                         >
                           {goal}
                         </button>
@@ -109,15 +118,18 @@ const Header = () => {
 
                 {/* Search Bar */}
                 <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <label htmlFor="main-search" className="sr-only">Search for Colleges, Exams, Courses and More</label>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true">
                     🔍
                   </span>
                   <input
-                    type="text"
+                    id="main-search"
+                    type="search"
                     placeholder="Search for Colleges, Exams, Courses and More.."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 bg-white text-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-orange-500"
+                    aria-label="Search for colleges, exams, courses and more"
                   />
                 </div>
               </div>
@@ -161,7 +173,7 @@ const Header = () => {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <div className="bg-gray-800">
+      <nav className="bg-gray-800" aria-label="Course navigation">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-1 overflow-x-auto">
             {courses.map((course, index) => (
@@ -169,8 +181,9 @@ const Header = () => {
                 key={index}
                 href={course.link || '#'}
                 className="flex items-center gap-2 px-4 py-3 text-sm font-medium hover:bg-gray-700 transition-colors whitespace-nowrap"
+                aria-label={`Navigate to ${course.name}`}
               >
-                {course.icon && <span>{course.icon}</span>}
+                {course.icon && <span aria-hidden="true">{course.icon}</span>}
                 <span>{course.name}</span>
               </a>
             ))}
@@ -181,20 +194,20 @@ const Header = () => {
                 href="#"
                 className="flex items-center gap-2 px-3 py-2 text-sm hover:text-orange-500 transition-colors whitespace-nowrap"
               >
-                <span>🌍</span>
+                <span aria-hidden="true">🌍</span>
                 <span>Study Abroad</span>
               </a>
               <a
                 href="#"
                 className="flex items-center gap-2 px-3 py-2 text-sm bg-purple-600 hover:bg-purple-700 rounded transition-colors whitespace-nowrap"
               >
-                <span>🔗</span>
+                <span aria-hidden="true">🔗</span>
                 <span>Course Finder</span>
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
