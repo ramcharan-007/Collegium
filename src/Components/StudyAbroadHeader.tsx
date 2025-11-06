@@ -4,7 +4,7 @@ import {
   countriesData,
   menuDropdownCountries,
   navbarCountries,
-} from "../data/dataLists"; 
+} from "../data/dataLists";
 
 import Header from "./Header";
 import {
@@ -13,6 +13,7 @@ import {
   Headphones,
   Grid,
   Menu,
+  X,
   User,
   University,
   BookOpen,
@@ -39,9 +40,9 @@ const StudyAbroadHeader = () => {
   const [selectedCountry, setSelectedCountry] = useState("Select Country");
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-  
+
   // === Currency Dropdown States and Refs ===
-  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false); 
+  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
   const [currencySearch, setCurrencySearch] = useState("");
   const [selectedCurrency, setSelectedCurrency] = useState("INR - ₹");
   const currencyButtonRef = useRef<HTMLButtonElement>(null);
@@ -50,7 +51,7 @@ const StudyAbroadHeader = () => {
 
   // === Navbar Menu Dropdown States and Refs ===
   const [showNavbarMenuDropdown, setShowNavbarMenuDropdown] = useState(false);
-  const navbarMenuRef = useRef<HTMLDivElement>(null); 
+  const navbarMenuRef = useRef<HTMLDivElement>(null);
 
   const [countrySearch, setCountrySearch] = useState("");
   const [showMainHeader, setShowMainHeader] = useState(false);
@@ -60,26 +61,41 @@ const StudyAbroadHeader = () => {
   //profile
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-
+  // mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // === Close dropdowns when clicking outside ===
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (exploreRef.current && !exploreRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+
+      if (exploreRef.current && !exploreRef.current.contains(target)) {
         setIsExploreOpen(false);
       }
-      if (countryRef.current && !countryRef.current.contains(event.target as Node)) {
+      if (countryRef.current && !countryRef.current.contains(target)) {
         setShowCountryDropdown(false);
       }
-      
+
       // Close Currency Dropdown
-      if (showCurrencyDropdown && currencyDropdownRef.current && !currencyDropdownRef.current.contains(event.target as Node) && currencyButtonRef.current && !currencyButtonRef.current.contains(event.target as Node)) {
-          setShowCurrencyDropdown(false);
+      if (
+        showCurrencyDropdown &&
+        currencyDropdownRef.current &&
+        !currencyDropdownRef.current.contains(target) &&
+        currencyButtonRef.current &&
+        !currencyButtonRef.current.contains(target)
+      ) {
+        setShowCurrencyDropdown(false);
       }
-      
+
       // Close Navbar Menu Dropdown
-      if (navbarMenuRef.current && !navbarMenuRef.current.contains(event.target as Node)) {
-          setShowNavbarMenuDropdown(false);
+      if (navbarMenuRef.current && !navbarMenuRef.current.contains(target)) {
+        setShowNavbarMenuDropdown(false);
+      }
+
+      // Close mobile menu
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
+        setIsMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -91,82 +107,78 @@ const StudyAbroadHeader = () => {
 
   // --- Start of Component Return ---
   return (
-    <header className="bg-white text-gray-800 shadow-sm border-b">
+    <header className="bg-white text-gray-800 shadow-sm border-b sticky top-0 z-50">
       {/* RENDER FIXED CURRENCY DROPDOWN HERE, OUTSIDE THE HEADER FLOW */}
       {showCurrencyDropdown && dropdownPosition && (
-          <div 
-            ref={currencyDropdownRef}
-            onClick={(e) => e.stopPropagation()} 
-            className="fixed bg-white border border-gray-200 shadow-lg rounded-md w-[480px] z-[100] p-4"
-            style={{
-                top: `${dropdownPosition.top}px`,
-                right: '20px', 
-            }}
-          >
-            <h3 className="text-base font-semibold text-gray-800 mb-3">Choose Currency </h3>
+        <div
+          ref={currencyDropdownRef}
+          onClick={(e) => e.stopPropagation()}
+          className="fixed bg-white border border-gray-200 shadow-lg rounded-md w-[480px] z-[100] p-4"
+          style={{
+            top: `${dropdownPosition.top}px`,
+            right: "20px",
+          }}
+        >
+          <h3 className="text-base font-semibold text-gray-800 mb-3">Choose Currency </h3>
 
-            {/* Search bar */}
-            <div className="relative mb-4">
-              <Search
-                size={16}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              />
-              <input
-                type="text"
-                placeholder="Search Your Currency"
-                value={currencySearch}
-                onChange={(e) => setCurrencySearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm outline-none focus:ring-2 focus:ring-orange-400 transition"
-              />
-            </div>
+          {/* Search bar */}
+          <div className="relative mb-4">
+            <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search Your Currency"
+              value={currencySearch}
+              onChange={(e) => setCurrencySearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm outline-none focus:ring-2 focus:ring-orange-400 transition"
+            />
+          </div>
 
-            {/* Currency Grid */}
-            <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
-              {currenciesData
-                .filter((c) =>
+          {/* Currency Grid */}
+          <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
+            {currenciesData
+              .filter(
+                (c) =>
                   c.name.toLowerCase().includes(currencySearch.toLowerCase()) ||
                   c.code.toLowerCase().includes(currencySearch.toLowerCase())
-                )
-                .map((c) => (
-                  <button
-                    key={c.code}
-                    onClick={() => {
-                      setSelectedCurrency(c.code);
-                      setShowCurrencyDropdown(false);
-                      setCurrencySearch("");
-                    }}
-                    className={`flex flex-col items-start p-3 border rounded-lg transition text-left ${
-                      selectedCurrency === c.code
-                        ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500"
-                        : "border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span className="font-medium text-gray-800">{c.name}</span>
-                    <span className="text-xs text-gray-500">{c.code}</span>
-                  </button>
-                ))}
-            </div>
+              )
+              .map((c) => (
+                <button
+                  key={c.code}
+                  onClick={() => {
+                    setSelectedCurrency(c.code);
+                    setShowCurrencyDropdown(false);
+                    setCurrencySearch("");
+                  }}
+                  className={`flex flex-col items-start p-3 border rounded-lg transition text-left ${
+                    selectedCurrency === c.code ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500" : "border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="font-medium text-gray-800">{c.name}</span>
+                  <span className="text-xs text-gray-500">{c.code}</span>
+                </button>
+              ))}
           </div>
+        </div>
       )}
 
-      {/* === TOP BAR (Content omitted for brevity) === */}
-      <div className="w-full flex items-center justify-between px-10 py-3">
-        {/* === LEFT SECTION (Logo, Select Country Dropdown) === */}
-        <div className="flex items-center gap-10">
+      {/* === TOP BAR (Desktop + Mobile header bar) === */}
+      <div className="w-full px-4 py-3 md:px-10 md:flex md:items-center md:justify-between">
+        {/* === LEFT SECTION (Logo, Hamburger for mobile, Select Country for desktop & mobile) === */}
+        <div className="flex items-center justify-between md:justify-start md:gap-10">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white text-lg font-semibold">🎓</span>
             </div>
-            <span className="text-2xl font-semibold text-[#2b4a91] tracking-tight">
+            <span className="text-xl md:text-2xl font-semibold text-[#2b4a91] tracking-tight">
               collegium<span className="text-gray-400 text-sm ml-1">.com</span>
             </span>
           </div>
 
-          {/* === Select Country Button + Dropdown === */}
-          <div className="relative" ref={countryRef}>
+          {/* Desktop: Select Country (visible on md and up) */}
+          <div className="hidden md:block ml-6 relative" ref={countryRef}>
             <button
-              onClick={() => setShowCountryDropdown(!showCountryDropdown)}
+              onClick={() => setShowCountryDropdown((prev) => !prev)}
               className="flex items-center gap-2 border border-gray-300 rounded-md text-sm px-3 py-1.5 hover:bg-gray-100 transition"
             >
               🌍 {selectedCountry}
@@ -220,15 +232,21 @@ const StudyAbroadHeader = () => {
               </div>
             )}
           </div>
+
+          {/* Mobile: Hamburger */}
+          <button
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            className="md:hidden p-2"
+            aria-label="Open mobile menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
         {/* === CENTER SEARCH === */}
-        <div className="flex-1 mx-10">
+        <div className="flex-1 mx-10 hidden md:block">
           <div className="relative w-full">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            />
+            <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search Universities and Programs"
@@ -237,17 +255,15 @@ const StudyAbroadHeader = () => {
           </div>
         </div>
 
-        {/* === RIGHT SECTION === */}
-        <div className="flex items-center gap-6">
-          {/* Write Review & Get Counselling (omitted for brevity) */}
+        {/* === RIGHT SECTION (Desktop actions) === */}
+        <div className="hidden md:flex items-center gap-6">
+          {/* Write Review & Get Counselling */}
           <button className="flex flex-col items-center text-gray-700 hover:text-orange-500 transition">
             <div className="flex items-center gap-1">
               <Edit3 size={16} />
               <span className="text-sm font-medium">Write a Review</span>
             </div>
-            <div className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded mt-1">
-              Get Upto 20 USD
-            </div>
+            <div className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded mt-1">Get Upto 20 USD</div>
           </button>
 
           <button className="flex flex-col items-center text-gray-700 hover:text-orange-500 transition">
@@ -255,12 +271,10 @@ const StudyAbroadHeader = () => {
               <Headphones size={16} />
               <span className="text-sm font-medium">Get Counselling</span>
             </div>
-            <div className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded mt-1">
-              1 on 1 Interaction
-            </div>
+            <div className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded mt-1">1 on 1 Interaction</div>
           </button>
-          
-          {/* Explore Dropdown (omitted for brevity) */}
+
+          {/* Explore Dropdown (desktop hover) */}
           <div
             className="relative"
             ref={exploreRef}
@@ -303,9 +317,7 @@ const StudyAbroadHeader = () => {
                   <ul className="space-y-3">
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <Globe className="text-blue-600" size={18} /> Study Abroad{" "}
-                      <span className="text-green-600 text-xs bg-green-100 px-2 py-0.5 rounded">
-                        Get upto 50% off Visa Fees
-                      </span>
+                      <span className="text-green-600 text-xs bg-green-100 px-2 py-0.5 rounded">Get upto 50% off Visa Fees</span>
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <ClipboardList className="text-blue-600" size={18} /> Abroad Exams
@@ -332,9 +344,7 @@ const StudyAbroadHeader = () => {
                 </div>
 
                 <div className="w-[280px] bg-orange-50 border border-orange-200 rounded-md p-4 flex flex-col items-center text-center">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    “Write a Review & Earn Upto <span className="text-orange-500">₹300</span>”
-                  </h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">“Write a Review & Earn Upto <span className="text-orange-500">₹300</span>”</h3>
                   <p className="text-xs text-gray-500 mb-2">✅ Approval in 15 Minutes*</p>
                   <div className="flex mb-3">
                     {[...Array(4)].map((_, i) => (
@@ -342,59 +352,252 @@ const StudyAbroadHeader = () => {
                     ))}
                     <Star className="text-gray-400" size={18} />
                   </div>
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/3201/3201408.png"
-                    alt="review"
-                    className="w-24 h-24 object-contain"
-                  />
+                  <img src="https://cdn-icons-png.flaticon.com/512/3201/3201408.png" alt="review" className="w-24 h-24 object-contain" />
                 </div>
               </div>
             )}
           </div>
 
-          {/* Menu + User (omitted for brevity) */}
-            <div className="relative">
+          {/* Profile button (desktop) */}
+          <div className="relative">
             <button
-                onClick={() => setIsProfileOpen((prev) => !prev)}
-                className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium"
+              onClick={() => setIsProfileOpen((prev) => !prev)}
+              className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-medium"
             >
-                <User size={18} />
+              <User size={18} />
             </button>
-
-            <ProfileModal
-                isOpen={isProfileOpen}
-                onClose={() => setIsProfileOpen(false)}
-            />
-            </div>
+          </div>
         </div>
       </div>
 
-      
+      {/* === MOBILE MENU (Full Screen Overlay) === */}
+      {isMobileMenuOpen && (
+        <div ref={mobileMenuRef} className="fixed inset-0 bg-white z-50 overflow-y-auto md:hidden">
+          <div className="p-4 border-b flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-lg font-semibold">🎓</span>
+              </div>
+              <span className="text-xl font-semibold text-[#2b4a91]">collegium.com</span>
+            </div>
+            <button onClick={() => setIsMobileMenuOpen(false)} aria-label="Close mobile menu">
+              <X size={24} />
+            </button>
+          </div>
+
+          <div className="p-4 space-y-6">
+            {/* Search */}
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search Universities and Programs..."
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md bg-gray-50 outline-none focus:ring-2 focus:ring-orange-400"
+              />
+            </div>
+
+            {/* Country Selector (mobile inline) */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setShowCountryDropdown((prev) => !prev)}
+                className="w-full text-left p-3 border rounded-md flex justify-between items-center"
+              >
+                <span className="text-sm">
+                  {selectedCountry}
+                </span>
+                <ChevronDown size={18} />
+              </button>
+
+              {showCountryDropdown && (
+                <div className="p-3 border rounded-md max-h-80 overflow-y-auto bg-white">
+                  <input
+                    type="text"
+                    placeholder="Search country..."
+                    value={countrySearch}
+                    onChange={(e) => setCountrySearch(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 mb-3 text-sm outline-none focus:ring-2 focus:ring-orange-400"
+                  />
+                  {countriesData
+                    .filter((c) => c.name.toLowerCase().includes(countrySearch.toLowerCase()))
+                    .map((c) => (
+                      <button
+                        key={c.name}
+                        onClick={() => {
+                          setSelectedCountry(c.name);
+                          setShowCountryDropdown(false);
+                        }}
+                        className="flex items-center gap-2 w-full text-left p-2 border-b hover:bg-gray-50"
+                      >
+                        <img src={c.flag} alt={c.name} className="w-5 h-5 rounded-full border" />
+                        <span>{c.name}</span>
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            {/* Currency (mobile inline toggle) */}
+            <div>
+              <button
+                onClick={() => {
+                  // open currency inline on mobile
+                  setShowCurrencyDropdown((prev) => !prev);
+                }}
+                className="w-full border border-gray-200 p-3 rounded-md flex items-center justify-between"
+              >
+                <span className="text-sm font-medium">{selectedCurrency}</span>
+                <ChevronDown size={18} />
+              </button>
+
+              {showCurrencyDropdown && (
+                <div className="mt-2 p-3 border rounded-md bg-white max-h-80 overflow-y-auto">
+                  <div className="relative mb-3">
+                    <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search Your Currency"
+                      value={currencySearch}
+                      onChange={(e) => setCurrencySearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-md text-sm outline-none focus:ring-2 focus:ring-orange-400 transition"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {currenciesData
+                      .filter(
+                        (c) =>
+                          c.name.toLowerCase().includes(currencySearch.toLowerCase()) ||
+                          c.code.toLowerCase().includes(currencySearch.toLowerCase())
+                      )
+                      .map((c) => (
+                        <button
+                          key={c.code}
+                          onClick={() => {
+                            setSelectedCurrency(c.code);
+                            setShowCurrencyDropdown(false);
+                            setCurrencySearch("");
+                          }}
+                          className={`flex flex-col items-start p-3 border rounded-lg transition text-left ${
+                            selectedCurrency === c.code ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500" : "border-gray-200 hover:bg-gray-50"
+                          }`}
+                        >
+                          <span className="font-medium text-gray-800">{c.name}</span>
+                          <span className="text-xs text-gray-500">{c.code}</span>
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Write Review */}
+            <button className="w-full bg-orange-50 border border-orange-200 rounded-md p-3 text-left flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-2 font-medium">
+                  <Edit3 size={18} /> Write a Review
+                </div>
+                <div className="text-xs text-orange-600">Get Upto 20 USD</div>
+              </div>
+            </button>
+
+            {/* Get Counselling */}
+            <button className="w-full bg-orange-50 border border-orange-200 rounded-md p-3 text-left flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-2 font-medium">
+                  <Headphones size={18} /> Get Counselling
+                </div>
+                <div className="text-xs text-orange-600">1 on 1 Interaction</div>
+              </div>
+            </button>
+
+            {/* Explore Items */}
+            <div className="space-y-2">
+              <h3 className="font-semibold text-gray-700">Explore</h3>
+              {[
+                { icon: University, text: "Top Universities & Colleges" },
+                { icon: BookOpen, text: "Top Courses" },
+                { icon: FileText, text: "Read College Reviews" },
+                { icon: BellRing, text: "Admission Alerts 2025" },
+                { icon: Globe, text: "Study Abroad" },
+                { icon: CreditCard, text: "Education Loan" },
+                { icon: MessageCircle, text: "Ask a Question" },
+                { icon: GraduationCap, text: "Course Finder" },
+              ].map((item, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="w-full text-left p-3 flex items-center justify-between hover:bg-gray-50 rounded-md"
+                  onClick={(e) => {
+                    // Course Finder on mobile should behave same as desktop
+                    if (item.text === "Course Finder") {
+                      e.preventDefault();
+                      setIsMobileMenuOpen(false);
+                      setShowMainHeader(true);
+                      return;
+                    }
+                    // close mobile menu for other items
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon size={18} className="text-blue-600" />
+                    <span className="text-sm">{item.text}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {/* Account */}
+            <div className="pt-2 border-t">
+              <button
+                onClick={() => {
+                  setIsProfileOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 p-3"
+              >
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                  <User size={18} />
+                </div>
+                <span className="font-medium">My Account</span>
+              </button>
+
+              {/* Mobile: also show Course Finder quick link under account area */}
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setShowMainHeader(true);
+                }}
+                className="w-full mt-2 text-left p-3 text-sm text-gray-700 hover:text-orange-500"
+              >
+                <Link size={14} className="inline mr-2" /> Course Finder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* === BOTTOM NAVBAR === */}
       <div className="border-t bg-gray-50">
-        <div className="max-w-[95%] mx-auto px-6 flex items-center gap-3 text-sm **overflow-x-auto** justify-between">
-          
+        <div className="max-w-[95%] mx-auto px-6 flex items-center gap-3 text-sm overflow-x-auto justify-between">
           {/* CRITICAL FIX: The inner container must have flex-nowrap to prevent line wrapping. */}
-          <div className="flex items-center gap-3 **flex-nowrap**">
+          <div className="flex items-center gap-3 flex-nowrap">
             {navbarCountries.map((name) => {
               if (name === "Menu") {
                 return (
                   // "Menu" Button and Dropdown Container
                   // flex-shrink-0 ensures this item doesn't shrink when scrolling
-                  <div key={name} className="relative **flex-shrink-0**" ref={navbarMenuRef}>
+                  <div key={name} className="relative flex-shrink-0" ref={navbarMenuRef}>
                     <button
-                      onClick={() => setShowNavbarMenuDropdown(!showNavbarMenuDropdown)}
+                      onClick={() => setShowNavbarMenuDropdown((prev) => !prev)}
                       className={`px-3 py-3 flex items-center gap-1 transition whitespace-nowrap font-medium ${
-                        showNavbarMenuDropdown
-                          ? "text-orange-500 bg-white border-x border-t border-gray-200 rounded-t-lg shadow-inner"
-                          : "text-gray-700 hover:text-orange-500"
+                        showNavbarMenuDropdown ? "text-orange-500 bg-white border-x border-t border-gray-200 rounded-t-lg shadow-inner" : "text-gray-700 hover:text-orange-500"
                       }`}
                     >
                       {name}
                       <ChevronDown size={14} className="mt-0.5" />
                     </button>
-                    
+
                     {showNavbarMenuDropdown && (
                       // SIMPLE DROPDOWN: Countries List
                       <div className="absolute left-0 top-full mt-0 w-[240px] bg-white border border-gray-200 shadow-xl rounded-b-lg z-50 max-h-[300px] overflow-y-auto">
@@ -402,24 +605,13 @@ const StudyAbroadHeader = () => {
                           {menuDropdownCountries.map((country) => (
                             <a
                               key={country}
-                              href={`/study-abroad/country/${country.toLowerCase().replace(/[\s/()&]/g, '-')}`}
+                              href={`/study-abroad/country/${country.toLowerCase().replace(/[\s/()&]/g, "-")}`}
                               className="flex items-center justify-between text-gray-700 px-4 py-2 hover:bg-orange-50 hover:text-orange-600 transition duration-150 text-sm"
                               onClick={() => setShowNavbarMenuDropdown(false)}
                             >
                               <span>{country}</span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-4 h-4 text-gray-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M9 5l7 7-7 7"
-                                />
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                               </svg>
                             </a>
                           ))}
@@ -429,39 +621,33 @@ const StudyAbroadHeader = () => {
                   </div>
                 );
               }
-              
+
               // Existing country links: flex-shrink-0 ensures these items don't shrink
               return (
-                <a
-                  key={name}
-                  href="#"
-                  className="px-3 py-3 text-gray-700 hover:text-orange-500 transition whitespace-nowrap **flex-shrink-0**"
-                >
+                <a key={name} href="#" className="px-3 py-3 text-gray-700 hover:text-orange-500 transition whitespace-nowrap flex-shrink-0">
                   {name}
                 </a>
               );
             })}
           </div>
 
-          <div className="flex items-center gap-4 **flex-shrink-0**">
+          <div className="flex items-center gap-4 flex-shrink-0">
             {/* Currency Button */}
             <button
               ref={currencyButtonRef}
               onClick={(e) => {
-                  e.stopPropagation();
-                  const button = currencyButtonRef.current;
-                  if (button) {
-                      const rect = button.getBoundingClientRect();
-                      setDropdownPosition({ top: rect.bottom + 5 });
-                  }
-                  setShowCurrencyDropdown(prev => !prev);
+                e.stopPropagation();
+                const button = currencyButtonRef.current;
+                if (button) {
+                  const rect = button.getBoundingClientRect();
+                  setDropdownPosition({ top: rect.bottom + 5 });
+                }
+                setShowCurrencyDropdown((prev) => !prev);
               }}
               className="flex items-center gap-1 text-sm text-gray-700 hover:text-orange-500 transition whitespace-nowrap px-3 py-3"
             >
               <span className="font-medium flex items-center gap-1">
-                 
-                  <span className="text-gray-800">{selectedCurrency}</span>
-
+                <span className="text-gray-800">{selectedCurrency}</span>
               </span>
               <ChevronDown size={14} className="ml-0.5" />
             </button>
@@ -475,6 +661,9 @@ const StudyAbroadHeader = () => {
           </div>
         </div>
       </div>
+
+      {/* Profile modal is rendered always so it works on mobile too */}
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </header>
   );
 };
