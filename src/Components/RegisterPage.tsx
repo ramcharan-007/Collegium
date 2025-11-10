@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, memo, lazy, Suspense } from 'react';
 import Header from './Header.tsx';
-import Footer from './Footer.tsx';
-import IllustrationSection from './Register/IllustrationSection.tsx';
-import RegisterForm from './Register/RegisterForm.tsx';
+import LightweightRegisterForm from './Register/LightweightRegisterForm.tsx';
+
+// Lazy load heavy components
+const IllustrationSection = lazy(() => import('./Register/IllustrationSection.tsx'));
+const Footer = lazy(() => import('./Footer.tsx'));
 
 const RegisterPage = () => {
   const [selectedType, setSelectedType] = useState('college');
@@ -11,33 +13,30 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="min-h-screen" style={{ backgroundColor: '#fde6d8' }}>
-        <div className="w-full h-full">
-          {/* Mobile and Tablet View (< 1024px) */}
-          <div className="lg:hidden w-full min-h-screen flex items-start justify-center pt-4 px-2">
-            <div className="w-full max-w-full">
-              <RegisterForm selectedType={selectedType} onTypeChange={setSelectedType} />
-            </div>
-          </div>
-
-          {/* Desktop View (>= 1024px) */}
-          <div className="hidden lg:flex lg:min-h-screen">
-            <div className="w-1/2 flex items-center justify-center p-8">
+      <main className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#fde6d8' }}>
+        <div className="flex flex-col lg:flex-row gap-8 w-full max-w-6xl">
+          {/* Illustration - Desktop Only, Lazy Loaded */}
+          <div className="hidden lg:block lg:w-1/2">
+            <Suspense fallback={<div className="w-full h-64 bg-orange-100 rounded-lg animate-pulse"></div>}>
               <IllustrationSection selectedType={selectedType} />
-            </div>
-            <div className="w-1/2 flex items-center justify-center p-8">
-              <RegisterForm selectedType={selectedType} onTypeChange={setSelectedType} />
-            </div>
+            </Suspense>
+          </div>
+          
+          {/* Lightweight Form - Always Visible */}
+          <div className="w-full lg:w-1/2">
+            <LightweightRegisterForm selectedType={selectedType} onTypeChange={setSelectedType} />
           </div>
         </div>
       </main>
 
-      {/* Footer - Hidden on mobile for register page */}
+      {/* Footer - Lazy Loaded, Desktop Only */}
       <div className="hidden lg:block">
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default memo(RegisterPage);
