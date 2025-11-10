@@ -5,9 +5,9 @@ import Header from "./Components/Header";
 
 function App() {
   return <>
-    {/* <Login /> */}
-    {/* <Footer /> */}
-    {/* <Header /> */}
+    <Login />
+    <Footer />
+    <Header />
   </>;
 }
 

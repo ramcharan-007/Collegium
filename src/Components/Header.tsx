@@ -1,35 +1,35 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const Header = () => {
-  const [selectedGoal, setSelectedGoal] = useState('Select Goal');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGoal, setSelectedGoal] = useState("Select Goal");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isGoalDropdownOpen, setIsGoalDropdownOpen] = useState(false);
 
   const goals = [
-    'B.Tech',
-    'MBA',
-    'M.Tech',
-    'MBBS',
-    'B.Com',
-    'B.Sc',
-    'B.Sc (Nursing)',
-    'BA',
-    'BBA',
-    'BCA',
+    "B.Tech",
+    "MBA",
+    "M.Tech",
+    "MBBS",
+    "B.Com",
+    "B.Sc",
+    "B.Sc (Nursing)",
+    "BA",
+    "BBA",
+    "BCA",
   ];
 
   const courses = [
-    { name: 'All Courses', icon: '📚' },
-    { name: 'B.Tech', link: '#' },
-    { name: 'MBA', link: '#' },
-    { name: 'M.Tech', link: '#' },
-    { name: 'MBBS', link: '#' },
-    { name: 'B.Com', link: '#' },
-    { name: 'B.Sc', link: '#' },
-    { name: 'B.Sc (Nursing)', link: '#' },
-    { name: 'BA', link: '#' },
-    { name: 'BBA', link: '#' },
-    { name: 'BCA', link: '#' },
+    { name: "All Courses", icon: "📚" },
+    { name: "B.Tech", link: "#" },
+    { name: "MBA", link: "#" },
+    { name: "M.Tech", link: "#" },
+    { name: "MBBS", link: "#" },
+    { name: "B.Com", link: "#" },
+    { name: "B.Sc", link: "#" },
+    { name: "B.Sc (Nursing)", link: "#" },
+    { name: "BA", link: "#" },
+    { name: "BBA", link: "#" },
+    { name: "BCA", link: "#" },
   ];
 
   return (
@@ -56,9 +56,11 @@ const Header = () => {
                     onClick={() => setIsGoalDropdownOpen(!isGoalDropdownOpen)}
                     className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap"
                   >
-                    <span className="text-orange-500 text-sm">⚙️ Select Goal & ⊙ City</span>
+                    <span className="text-orange-500 text-sm">
+                      ⚙️ Select Goal & ⊙ City
+                    </span>
                   </button>
-                  
+
                   {/* Dropdown */}
                   {isGoalDropdownOpen && (
                     <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-50 py-2">
@@ -155,7 +157,7 @@ const Header = () => {
             {courses.map((course, index) => (
               <a
                 key={index}
-                href={course.link || '#'}
+                href={course.link || "#"}
                 className="flex items-center gap-2 px-4 py-3 text-sm font-medium hover:bg-gray-700 transition-colors whitespace-nowrap"
               >
                 {course.icon && <span>{course.icon}</span>}
