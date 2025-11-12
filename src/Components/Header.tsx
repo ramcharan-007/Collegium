@@ -213,7 +213,7 @@ const Header = () => {
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-full md:w-[600px] bg-white border border-gray-200 shadow-lg rounded-md z-50 p-6 max-h-[80vh] overflow-y-auto">
+              <div className="absolute top-full left-0 mt-2 w-full md:w-[600px] bg-white border border-gray-200 shadow-lg rounded-md z-[60] p-6 max-h-[80vh] overflow-y-auto">
                 {step === "course" && (
                   <>
                     <div className="flex justify-between items-center mb-4">
@@ -353,7 +353,7 @@ const Header = () => {
               <div
                 onMouseEnter={() => setIsExploreOpen(true)}
                 onMouseLeave={() => setIsExploreOpen(false)}
-                className="absolute right-0 top-full mt-3 bg-white border border-gray-200 shadow-lg rounded-md w-[850px] p-5 flex gap-6 z-50"
+                className="absolute right-0 top-full mt-3 bg-white border border-gray-200 shadow-lg rounded-md w-[850px] p-5 flex gap-6 z-[60]"
               >
                 <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
                   <ul className="space-y-3">
@@ -444,7 +444,7 @@ const Header = () => {
 
       {/* === MOBILE MENU (Full Screen Overlay) === */}
       {isMobileMenuOpen && (
-        <div ref={mobileMenuRef} className="fixed inset-0 bg-white z-50 overflow-y-auto md:hidden">
+        <div ref={mobileMenuRef} className="fixed inset-0 bg-white z-[60] overflow-y-auto md:hidden">
           <div className="p-4 border-b flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center">
@@ -548,7 +548,7 @@ const Header = () => {
 
       {/* === COURSE + CITY FULLSCREEN DROPDOWN (Mobile) === */}
       {isDropdownOpen && (
-        <div className="fixed inset-0 bg-white z-50 overflow-y-auto md:hidden">
+        <div className="fixed inset-0 bg-white z-[60] overflow-y-auto md:hidden">
           <div className="p-4 border-b flex justify-between items-center">
             <h3 className="font-semibold">
               {step === "course" ? "Select Course" : "Select City"}
@@ -658,7 +658,7 @@ const Header = () => {
                         position: "fixed",
                         top: `${dropdownPos.top}px`,
                         left: `${dropdownPos.left}px`,
-                        zIndex: 9999,
+                        zIndex: 60,
                       }}
                       className="w-60 bg-white border border-gray-200 shadow-2xl rounded-md max-h-96 overflow-y-auto"
                     >
