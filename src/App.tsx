@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import StudyAbroadHeader from "./Components/StudyAbroadHeader";
+import CollegeDetailsPage from "./Components/CollegeDetails/CollegeDetailsPage"; // ✅ Import added
 
 // 🧩 Import Admin Pages
 import Login from "./admin/Login";
@@ -48,11 +49,38 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        {/* === Default Homepage Route === */}
+        <Route
+          path="/"
+          element={
+            <>
+              {/* <Login /> */}
+              <Header />
+              {/* <Footer /> */}
+            </>
+          }
+        />
+
+        {/* === Study Abroad Page Route === */}
+        <Route
+          path="/study-abroad"
+          element={
+            <>
+              <StudyAbroadHeader />
+              {/* <Footer /> */}
+            </>
+          }
+        />
+
+        {/* === College Details Page Route === */}
+        <Route
+          path="/college-details"
+          element={<CollegeDetailsPage />} // ✅ Loads header + banner
+        />
+      </Routes>
+    </Router>
   );
 }
 
