@@ -3,6 +3,7 @@ import Login from "./Components/Login";
 import Footer from "./Components/Footer";
 import Header from "./Components/Header";
 import StudyAbroadHeader from "./Components/StudyAbroadHeader";
+import CollegeDetailsPage from "./Components/CollegeDetails/CollegeDetailsPage"; // ✅ Import added
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           element={
             <>
               {/* <Login /> */}
-              {<Header />}
+              <Header />
               {/* <Footer /> */}
             </>
           }
@@ -25,10 +26,16 @@ function App() {
           path="/study-abroad"
           element={
             <>
-              {<StudyAbroadHeader />}
+              <StudyAbroadHeader />
               {/* <Footer /> */}
             </>
           }
+        />
+
+        {/* === College Details Page Route === */}
+        <Route
+          path="/college-details"
+          element={<CollegeDetailsPage />} // ✅ Loads header + banner
         />
       </Routes>
     </Router>
