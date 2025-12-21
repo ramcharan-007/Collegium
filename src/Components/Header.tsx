@@ -58,7 +58,9 @@ const Header = () => {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const allCoursesButtonRef = useRef<HTMLButtonElement>(null);
 
-  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number }>(
+    { top: 0, left: 0 }
+  );
 
   // Close popups on outside click
   useEffect(() => {
@@ -160,24 +162,42 @@ const Header = () => {
       }}
     >
       <span>{name}</span>
-      <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      <svg
+        className="w-4 h-4 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 5l7 7-7 7"
+        />
       </svg>
     </a>
   );
 
   return (
-    <header className="bg-white text-gray-800 shadow-sm border-b sticky top-0 z-50">
+    <header className="bg-transparent text-gray-800 absolute top-0 left-0 right-0 z-50">
       {/* === TOP BAR === */}
-      <div className="w-full px-4 py-3 md:px-10 md:flex md:items-center md:justify-between" ref={dropdownRef}>
+      <div
+        className="w-full px-4 py-3 md:px-10 md:flex md:items-center md:justify-between"
+        ref={dropdownRef}
+      >
         {/* Logo + Hamburger */}
         <div className="flex items-center justify-between md:justify-start md:gap-10">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white text-lg font-semibold">🎓</span>
             </div>
-            <span className="text-xl md:text-2xl font-semibold text-[#2b4a91] tracking-tight">
-              collegium<span className="text-gray-400 text-sm ml-1">.com</span>
+            <span
+              className="text-xl md:text-2xl font-semibold text-white tracking-tight cursor-pointer"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            >
+              collegium<span className="text-white text-sm ml-1">.com</span>
             </span>
           </div>
 
@@ -198,16 +218,27 @@ const Header = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span className="text-xs text-orange-500 font-medium flex items-center gap-1">
-                Target Select Goal & <MapPin size={12} className="text-orange-500" /> City
+                Target Select Goal &{" "}
+                <MapPin size={12} className="text-orange-500" /> City
               </span>
-              <div className="flex items-center gap-1 text-sm mt-0.5">
-                <span className="font-medium text-gray-800">
+              <div className="flex items-center gap-1 text-sm mt-0.5 text-white">
+                <span className="font-medium">
                   {selectedCourse && selectedCity
                     ? `${selectedCourse}, ${selectedCity}`
                     : "Select Course & City"}
                 </span>
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </div>
@@ -217,7 +248,9 @@ const Header = () => {
                 {step === "course" && (
                   <>
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold">Select Your Study Preference</h3>
+                      <h3 className="text-lg font-semibold">
+                        Select Your Study Preference
+                      </h3>
                       <button
                         onClick={() => setIsDropdownOpen(false)}
                         className="text-blue-500 text-sm hover:underline"
@@ -241,21 +274,28 @@ const Header = () => {
                           const lower = searchQuery.toLowerCase();
                           return (
                             category.toLowerCase().includes(lower) ||
-                            list.some((course) => course.toLowerCase().includes(lower))
+                            list.some((course) =>
+                              course.toLowerCase().includes(lower)
+                            )
                           );
                         })
                         .map(([category, list]) => {
                           const Icon = categoryIcons[category] || BookOpen;
                           const filteredList = list.filter((course) =>
-                            course.toLowerCase().includes(searchQuery.toLowerCase())
+                            course
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
                           );
-                          const visibleList = searchQuery.trim() === "" ? list : filteredList;
+                          const visibleList =
+                            searchQuery.trim() === "" ? list : filteredList;
 
                           return (
                             <div key={category} className="flex flex-col">
                               <div className="font-semibold text-gray-800 flex items-center gap-2 mb-3">
                                 <Icon size={18} className="text-blue-600" />
-                                <span>{category.replace(/([A-Z])/g, " $1").trim()}</span>
+                                <span>
+                                  {category.replace(/([A-Z])/g, " $1").trim()}
+                                </span>
                               </div>
 
                               <div className="flex flex-wrap gap-2">
@@ -270,8 +310,18 @@ const Header = () => {
                                     }`}
                                   >
                                     {course}
-                                    <svg className="w-3 h-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    <svg
+                                      className="w-3 h-3 ml-1"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 5l7 7-7 7"
+                                      />
                                     </svg>
                                   </button>
                                 ))}
@@ -286,7 +336,9 @@ const Header = () => {
                 {step === "city" && (
                   <>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-semibold">Select Preferred City</h3>
+                      <h3 className="text-lg font-semibold">
+                        Select Preferred City
+                      </h3>
                       <button
                         onClick={() => {
                           setStep("course");
@@ -318,7 +370,10 @@ const Header = () => {
           {/* Search Bar */}
           <div className="flex-1">
             <div className="relative">
-              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search
+                size={18}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
               <input
                 type="text"
                 placeholder="Search for Colleges, Exams, Courses..."
@@ -334,19 +389,21 @@ const Header = () => {
         <div className="hidden md:flex items-center gap-6">
           <button className="flex flex-col items-center text-gray-700 hover:text-orange-500 transition text-xs">
             <div className="flex items-center gap-1">
-              <Edit3 size={16} />
-              <span className="font-medium">Write a Review</span>
+              <Edit3 size={16} className="text-white" />
+              <span className="font-medium text-white">Write a Review</span>
             </div>
-            <div className="bg-orange-500 text-white px-2 py-0.5 rounded mt-1 text-xs">Get Upto ₹300</div>
+            <div className="bg-orange-500 text-white px-2 py-0.5 rounded mt-1 text-xs">
+              Get Upto ₹300
+            </div>
           </button>
 
           <div className="relative" ref={exploreRef}>
             <button
               onMouseEnter={() => setIsExploreOpen(true)}
               onMouseLeave={() => setIsExploreOpen(false)}
-              className="flex items-center gap-2 hover:text-orange-500 text-sm transition"
+              className="flex items-center gap-2 hover:text-orange-500 text-sm transition text-white"
             >
-              <Grid size={18} /> Explore
+              <Grid size={18} className="text-white" /> Explore
             </button>
 
             {isExploreOpen && (
@@ -358,25 +415,31 @@ const Header = () => {
                 <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
                   <ul className="space-y-3">
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <University className="text-blue-600" size={18} /> Top Universities & Colleges
+                      <University className="text-blue-600" size={18} /> Top
+                      Universities & Colleges
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <BookOpen className="text-blue-600" size={18} /> Top Courses
+                      <BookOpen className="text-blue-600" size={18} /> Top
+                      Courses
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <FileText className="text-blue-600" size={18} /> Read College Reviews
+                      <FileText className="text-blue-600" size={18} /> Read
+                      College Reviews
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <BellRing className="text-blue-600" size={18} /> Admission Alerts 2025
+                      <BellRing className="text-blue-600" size={18} /> Admission
+                      Alerts 2025
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <Users className="text-blue-600" size={18} /> Institute
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <Calculator className="text-blue-600" size={18} /> College Predictor
+                      <Calculator className="text-blue-600" size={18} /> College
+                      Predictor
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <HelpCircle className="text-blue-600" size={18} /> Practice Questions
+                      <HelpCircle className="text-blue-600" size={18} />{" "}
+                      Practice Questions
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <Award className="text-blue-600" size={18} /> Scholarship
@@ -386,40 +449,55 @@ const Header = () => {
                   <ul className="space-y-3">
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <Globe className="text-blue-600" size={18} /> Study Abroad{" "}
-                      <span className="text-green-600 text-xs bg-green-100 px-2 py-0.5 rounded">Get upto 50% off</span>
+                      <span className="text-green-600 text-xs bg-green-100 px-2 py-0.5 rounded">
+                        Get upto 50% off
+                      </span>
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <ClipboardList className="text-blue-600" size={18} /> Abroad Exams
+                      <ClipboardList className="text-blue-600" size={18} />{" "}
+                      Abroad Exams
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <ClipboardList className="text-blue-600" size={18} /> Exams
+                      <ClipboardList className="text-blue-600" size={18} />{" "}
+                      Exams
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
                       <Newspaper className="text-blue-600" size={18} /> News
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <CreditCard className="text-blue-600" size={18} /> Education Loan
+                      <CreditCard className="text-blue-600" size={18} />{" "}
+                      Education Loan
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <MessageCircle className="text-blue-600" size={18} /> Ask a Question
+                      <MessageCircle className="text-blue-600" size={18} /> Ask
+                      a Question
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <ClipboardList className="text-blue-600" size={18} /> Test Series
+                      <ClipboardList className="text-blue-600" size={18} /> Test
+                      Series
                     </li>
                     <li className="flex items-center gap-2 hover:text-orange-500 cursor-pointer">
-                      <GraduationCap className="text-blue-600" size={18} /> Course Finder
+                      <GraduationCap className="text-blue-600" size={18} />{" "}
+                      Course Finder
                     </li>
                   </ul>
                 </div>
 
                 <div className="w-[280px] bg-orange-50 border border-orange-200 rounded-md p-4 flex flex-col items-center text-center">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    “Write a Review & Earn Upto <span className="text-orange-500">₹300</span>”
+                    “Write a Review & Earn Upto{" "}
+                    <span className="text-orange-500">₹300</span>”
                   </h3>
-                  <p className="text-xs text-gray-500 mb-2">Approval in 15 Minutes*</p>
+                  <p className="text-xs text-gray-500 mb-2">
+                    Approval in 15 Minutes*
+                  </p>
                   <div className="flex mb-3">
                     {[...Array(4)].map((_, i) => (
-                      <Star key={i} className="text-orange-500 fill-orange-500" size={18} />
+                      <Star
+                        key={i}
+                        className="text-orange-500 fill-orange-500"
+                        size={18}
+                      />
                     ))}
                     <Star className="text-gray-400" size={18} />
                   </div>
@@ -444,13 +522,18 @@ const Header = () => {
 
       {/* === MOBILE MENU (Full Screen Overlay) === */}
       {isMobileMenuOpen && (
-        <div ref={mobileMenuRef} className="fixed inset-0 bg-white z-[60] overflow-y-auto md:hidden">
+        <div
+          ref={mobileMenuRef}
+          className="fixed inset-0 bg-white z-[60] overflow-y-auto md:hidden"
+        >
           <div className="p-4 border-b flex justify-between items-center">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-lg font-semibold">🎓</span>
               </div>
-              <span className="text-xl font-semibold text-[#2b4a91]">collegium.com</span>
+              <span className="text-xl font-semibold text-[#2b4a91]">
+                collegium.com
+              </span>
             </div>
             <button onClick={() => setIsMobileMenuOpen(false)}>
               <X size={24} />
@@ -460,7 +543,10 @@ const Header = () => {
           <div className="p-4 space-y-6">
             {/* Search */}
             <div className="relative">
-              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search
+                size={18}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              />
               <input
                 type="text"
                 placeholder="Search for Colleges, Exams, Courses..."
@@ -571,11 +657,16 @@ const Header = () => {
               {Object.entries(courseCategories)
                 .filter(([cat, list]) => {
                   const lower = searchQuery.toLowerCase();
-                  return cat.toLowerCase().includes(lower) || list.some(c => c.toLowerCase().includes(lower));
+                  return (
+                    cat.toLowerCase().includes(lower) ||
+                    list.some((c) => c.toLowerCase().includes(lower))
+                  );
                 })
                 .map(([cat, list]) => {
                   const Icon = categoryIcons[cat] || BookOpen;
-                  const filtered = list.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const filtered = list.filter((c) =>
+                    c.toLowerCase().includes(searchQuery.toLowerCase())
+                  );
                   const visible = searchQuery ? filtered : list;
                   if (visible.length === 0) return null;
 
@@ -586,7 +677,7 @@ const Header = () => {
                         {cat.replace(/([A-Z])/g, " $1").trim()}
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        {visible.map(course => (
+                        {visible.map((course) => (
                           <button
                             key={course}
                             onClick={() => handleCourseSelect(course)}
@@ -615,7 +706,7 @@ const Header = () => {
                 ← Back to Courses
               </button>
               <div className="grid grid-cols-2 gap-3">
-                {cities.map(city => (
+                {cities.map((city) => (
                   <button
                     key={city}
                     onClick={() => handleCitySelect(city)}
@@ -632,7 +723,7 @@ const Header = () => {
       )}
 
       {/* === BOTTOM NAVBAR === */}
-      <div className="border-t bg-gray-50 overflow-x-auto whitespace-nowrap">
+      <div className="border-t border-white/20 overflow-x-auto whitespace-nowrap">
         <div className="px-4 py-2 flex items-center gap-3 text-sm">
           {courses.map((course, i) => {
             if (course === "All Courses") {
@@ -640,11 +731,11 @@ const Header = () => {
                 <div key={i} className="relative inline-block">
                   <button
                     ref={allCoursesButtonRef}
-                    onClick={() => setIsAllCoursesOpen(prev => !prev)}
+                    onClick={() => setIsAllCoursesOpen((prev) => !prev)}
                     className={`px-3 py-2 flex items-center gap-1 transition font-medium ${
                       isAllCoursesOpen
                         ? "text-orange-500 bg-white border-x border-t border-gray-200 rounded-t-md"
-                        : "text-gray-700 hover:text-orange-500"
+                        : "text-white hover:text-orange-500"
                     }`}
                   >
                     All Courses
@@ -662,7 +753,7 @@ const Header = () => {
                       }}
                       className="w-60 bg-white border border-gray-200 shadow-2xl rounded-md max-h-96 overflow-y-auto"
                     >
-                      {allDropdownItems.map(name => (
+                      {allDropdownItems.map((name) => (
                         <CourseDropdownItem key={name} name={name} />
                       ))}
                     </div>
@@ -671,7 +762,11 @@ const Header = () => {
               );
             }
             return (
-              <a key={i} href="#" className="px-3 py-2 text-gray-700 hover:text-orange-500 transition">
+              <a
+                key={i}
+                href="#"
+                className="px-3 py-2 text-white hover:text-orange-500 transition"
+              >
                 {course}
               </a>
             );
@@ -682,18 +777,24 @@ const Header = () => {
               href="/study-abroad"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-gray-700 hover:text-orange-500"
+              className="flex items-center gap-1 text-white hover:text-orange-500"
             >
-               <Globe size={16} /> Study Abroad
+              <Globe size={16} /> Study Abroad
             </a>
-            <a href="#" className="flex items-center gap-1 text-gray-700 hover:text-orange-500">
+            <a
+              href="#"
+              className="flex items-center gap-1 text-white hover:text-orange-500"
+            >
               <Link size={16} /> Course Finder
             </a>
           </div>
         </div>
       </div>
 
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
     </header>
   );
 };

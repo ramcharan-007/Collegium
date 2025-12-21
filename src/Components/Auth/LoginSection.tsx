@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import OTPVerification from './OTPVerification.tsx';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import OTPVerification from "./OTPVerification.tsx";
 
 const LoginSection = () => {
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const countryCode = "+91";
   const [showOTP, setShowOTP] = useState(false);
   const [isRequestingOTP, setIsRequestingOTP] = useState(false);
 
@@ -13,28 +14,28 @@ const LoginSection = () => {
       setIsRequestingOTP(true);
 
       // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      console.log('Requesting OTP for:', countryCode + mobileNumber);
+      console.log("Requesting OTP for:", countryCode + mobileNumber);
       setShowOTP(true);
       setIsRequestingOTP(false);
     } else {
-      alert('Please enter a valid 10-digit mobile number');
+      alert("Please enter a valid 10-digit mobile number");
     }
   };
 
   const handleVerificationSuccess = () => {
     // This will be handled by navigation in OTPVerification component
-    console.log('OTP verified successfully');
+    console.log("OTP verified successfully");
   };
 
   const handleBackToLogin = () => {
     setShowOTP(false);
-    setMobileNumber('');
+    setMobileNumber("");
   };
 
   // Show OTP verification if OTP was requested
-  if (!showOTP) {
+  if (showOTP) {
     return (
       <OTPVerification
         phoneNumber={countryCode + mobileNumber}
@@ -46,61 +47,76 @@ const LoginSection = () => {
 
   return (
     <div className="w-full max-w-full sm:max-w-md mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl p-4 lg:p-8">
+      <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
           Login
         </h2>
 
-        {/* Mobile Number Input */}
+        {/* Mobile Number Input with Floating Label */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Mobile Number
-          </label>
-          <div className="flex gap-2">
+          <div className="flex items-stretch border border-gray-300 rounded-lg focus-within:border-orange-500">
             {/* Country Code */}
-            <select
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-              className="w-20 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-            >
-              <option value="+91">+91</option>
-              <option value="+1">+1</option>
-              <option value="+44">+44</option>
-            </select>
+            <div className="flex items-center justify-center px-4 bg-white border-r border-gray-300 text-gray-700 font-medium rounded-l-lg">
+              <span>+91</span>
+            </div>
 
-            {/* Mobile Number */}
+            {/* Mobile Number Input with Floating Label */}
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                📱
-              </span>
               <input
                 type="tel"
+                id="mobile-input"
                 value={mobileNumber}
-                onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                placeholder="Mobile Number"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                onChange={(e) =>
+                  setMobileNumber(
+                    e.target.value.replace(/\D/g, "").slice(0, 10)
+                  )
+                }
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                placeholder=" "
+                className="peer w-full px-4 pt-5 pb-5 outline-none text-gray-700 rounded-r-lg"
               />
+              {/* Floating Label */}
+              <label
+                htmlFor="mobile-input"
+                className={`absolute left-3 bg-white px-1 transition-all duration-200 pointer-events-none
+                  ${
+                    isFocused || mobileNumber
+                      ? "-top-2.5 text-xs text-orange-500 font-medium"
+                      : "top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+                  }`}
+              >
+                Mobile Number
+              </label>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-500">
+                📞
+              </span>
             </div>
           </div>
+          {mobileNumber.length > 0 && mobileNumber.length < 10 && (
+            <p className="text-xs text-orange-500 mt-1">
+              Please enter a valid mobile number
+            </p>
+          )}
         </div>
 
         {/* Request OTP Button */}
         <button
           onClick={handleRequestOTP}
           disabled={isRequestingOTP}
-          className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors mb-4"
+          className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white font-semibold py-3 rounded-full transition-colors mb-4"
         >
-          {isRequestingOTP ? 'Sending OTP...' : 'Request OTP'}
+          {isRequestingOTP ? "Sending OTP..." : "Request OTP"}
         </button>
 
         {/* Sign Up Link */}
         <div className="text-center mb-4">
           <span className="text-sm text-gray-600">
-            Not a member yet?{' '}
+            Not a member yet?{" "}
             <a href="#" className="text-blue-600 hover:underline font-medium">
               Join us
-            </a>
-            {' '}it's free
+            </a>{" "}
+            it's free
           </span>
         </div>
 
